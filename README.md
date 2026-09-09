@@ -1,4 +1,4 @@
-# WiproAssesment - Android Project
+# Assesment - Android Project
 
 A modern Android application demonstrating Clean Architecture, MVVM, and the latest Jetpack libraries. This project fetches and displays a list of products from a remote API.
 
