@@ -1,6 +1,6 @@
 package com.example.wiproassesment.di
 
-import com.example.wiproassesment.data.remote.PokemonApi
+import com.example.wiproassesment.data.remote.api.ProductApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -11,9 +11,11 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
+
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+    private const val BASE_URL = "https://dummyjson.com/"
 
     @Provides
     @Singleton
@@ -25,25 +27,33 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttpClient(loggingInterceptor: HttpLoggingInterceptor): OkHttpClient {
+    fun provideOkhttpClient(
+        loggingInterceptor: HttpLoggingInterceptor
+
+    ): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(loggingInterceptor)
+            .retryOnConnectionFailure(true)
             .build()
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
+    fun provideRetrofit(
+        okHttpClient: OkHttpClient
+    ): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(PokemonApi.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .baseUrl(BASE_URL)
             .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create())
             .build()
     }
-
     @Provides
     @Singleton
-    fun providePokemonApi(retrofit: Retrofit): PokemonApi {
-        return retrofit.create(PokemonApi::class.java)
+    fun provideProductApiService(
+        retrofit: Retrofit
+    ): ProductApiService {
+        return retrofit.create(ProductApiService::class.java)
     }
+
 }
